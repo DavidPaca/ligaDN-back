@@ -9,4 +9,5 @@ class championship_teams extends Model
 {
     use HasFactory;
     protected $primaryKey = 'championship_team_id';
+    protected $fillable = ['championship_category_id', 'equipo_id', 'status'];
 }

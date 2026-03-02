@@ -2,12 +2,19 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChampionshipCategoriesController;
+use App\Http\Controllers\ChampionshipController;
+use App\Http\Controllers\ChampionshipTeamsController;
 use App\Http\Controllers\EquipoController;
+use App\Http\Controllers\MatchesController;
+use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\PlayingScheduleController;
 use App\Http\Controllers\RefereeSanctionController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\VocaliaController;
+use App\Http\Controllers\MatchDetailsController;
 use Illuminate\Http\Request;
+use Illuminate\Routing\ViewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +26,11 @@ use Illuminate\Support\Facades\Route;
 /////////// --- 1. RUTAS PÚBLICAS (Sin token) ---
 Route::post('/login', [AuthController::class, 'login']);
 
+/////////// --- RUTAS PÚBLICAS (Añadir debajo de /login) ---
+// Es recomendable que las estadísticas sean públicas para los fans de la liga
+Route::get('/view-posiciones', [ViewController::class, 'posiciones']);
+Route::get('/view-goleadores', [ViewController::class, 'goleadores']);
+Route::get('/view-sanciones', [ViewController::class, 'sanciones']);
 
 /////////// --- 2. RUTAS PROTEGIDAS (Requieren Token Sanctum) ---
 Route::middleware('auth:sanctum')->group(function () {
@@ -37,8 +49,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/equipo-create', [EquipoController::class, 'create']);
     Route::post('/equipo-update/{equipo_id}', [EquipoController::class, 'update']);
     Route::post('/equipo-delete/{equipo_id}', [EquipoController::class, 'destroy']);
-
-
 
     /////////////////////////////////////////////////// ROL ///////////////////////////////////////////////////
     Route::get('/rol', [RolController::class, 'index']);
@@ -69,4 +79,40 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/referee-sanction-create', [RefereeSanctionController::class, 'create']);
     Route::post('/referee-sanction-update/{referee_sanction_id}', [RefereeSanctionController::class, 'update']);
     Route::post('/referee-sanction-delete/{referee_sanction_id}', [RefereeSanctionController::class, 'destroy']);
+
+    /////////////////////////////////////////////////// *** CHAMPIONSHIPS *** ///////////////////////////////////////////////////
+    Route::get('/championship', [ChampionshipController::class, 'index']);
+    Route::post('/championship-create', [ChampionshipController::class, 'create']);
+    Route::post('/championship-update/{championship_id}', [ChampionshipController::class, 'update']);
+    Route::post('/championship-delete/{championship_id}', [ChampionshipController::class, 'destroy']);
+
+    /////////////////////////////////////////////////// CHAMPIONSHIP CATEGORIES ///////////////////////////////////////////////////
+    Route::get('/championship-category', [ChampionshipCategoriesController::class, 'index']);
+    Route::post('/championship-category-create', [ChampionshipCategoriesController::class, 'create']);
+    Route::post('/championship-category-update/{championship_category_id}', [ChampionshipCategoriesController::class, 'update']);
+    Route::post('/championship-category-delete/{championship_category_id}', [ChampionshipCategoriesController::class, 'destroy']);
+
+    /////////////////////////////////////////////////// CHAMPIONSHIP TEAMS ///////////////////////////////////////////////////
+    Route::get('/championship-team', [ChampionshipTeamsController::class, 'index']);
+    Route::post('/championship-team-create', [ChampionshipTeamsController::class, 'create']);
+    Route::post('/championship-team-update/{championship_team_id}', [ChampionshipTeamsController::class, 'update']);
+    Route::post('/championship-team-delete/{championship_team_id}', [ChampionshipTeamsController::class, 'destroy']);
+
+    /////////////////////////////////////////////////// PLAYERS ///////////////////////////////////////////////////
+    Route::get('/player', [PlayerController::class, 'index']);
+    Route::post('/player-create', [PlayerController::class, 'create']);
+    Route::post('/player-update/{player_id}', [PlayerController::class, 'update']);
+    Route::post('/player-delete/{player_id}', [PlayerController::class, 'destroy']);
+
+    /////////////////////////////////////////////////// MATCHES ///////////////////////////////////////////////////
+    Route::get('/match', [MatchesController::class, 'index']);
+    Route::post('/match-create', [MatchesController::class, 'create']);
+    Route::post('/match-update/{match_id}', [MatchesController::class, 'update']);
+    Route::post('/match-delete/{match_id}', [MatchesController::class, 'destroy']);
+
+    /////////////////////////////////////////////////// MATCH DETAILS (Goles/Tarjetas) ///////////////////////////////////////////////////
+    Route::get('/match-detail', [MatchDetailsController::class, 'index']);
+    Route::post('/match-detail-create', [MatchDetailsController::class, 'create']);
+    Route::post('/match-detail-update/{match_detail_id}', [MatchDetailsController::class, 'update']);
+    Route::post('/match-detail-delete/{match_detail_id}', [MatchDetailsController::class, 'destroy']);
 });

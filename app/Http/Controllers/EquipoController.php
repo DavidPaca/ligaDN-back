@@ -13,8 +13,8 @@ class EquipoController extends Controller
     public function index()
     {
         $equipoAll = equipo::where('estado', 'V')
-        // ->orderBy('nombre_completo')
-        ->get();
+            // ->orderBy('nombre_completo')
+            ->get();
         // return response()->json($equipoAll);
         return $equipoAll;
     }
@@ -103,7 +103,7 @@ class EquipoController extends Controller
         try {
             // 1. Buscar el equipo por el ID de la URL
             $equipo = equipo::find($equipo_id);
-var_dump($equipo);
+            // var_dump($equipo);
             // 2. Verificar si existe
             if (!$equipo) {
                 return response()->json([

@@ -12,15 +12,20 @@ class ChampionshipTeamsController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(championship_teams::where('status', 'V')->with(['category_info', 'equipo'])->get());
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $data = $request->validate([
+            'championship_category_id' => 'required|exists:championship_categories,championship_category_id',
+            'equipo_id'                => 'required|exists:equipos,equipo_id',
+        ]);
+        $item = championship_teams::create(array_merge($data, ['status' => 'V']));
+        return response()->json(['message' => 'Equipo inscrito correctamente', 'data' => $item], 201);
     }
 
     /**

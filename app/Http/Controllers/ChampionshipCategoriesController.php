@@ -12,15 +12,22 @@ class ChampionshipCategoriesController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(championship_categories::where('status', 'V')->with(['championship', 'category'])->get());
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        echo "<pre>+ $request->all()</pre>";
+        $data = $request->validate([            
+            'championship_id' => 'required|exists:championships,championship_id',
+            'category_id'     => 'required|exists:categories,category_id',
+            'max_teams'       => 'required|integer',
+        ]);
+        $item = championship_categories::create(array_merge($data, ['status' => 'V']));
+        return response()->json(['message' => 'Categoría asignada al campeonato', 'data' => $item], 201);
     }
 
     /**

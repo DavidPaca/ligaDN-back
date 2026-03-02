@@ -29,7 +29,8 @@ class DatabaseSeeder extends Seeder
         $championship->type = "categories";
         $championship->start_date = "2026-02-01";
         $championship->end_date = "2026-12-01";
-        $championship->status_championship = "V";
+        $championship->status_championship = "AC";
+        $championship->status = "V";
         $championship->save();
 
         ////////// CATEGORIAS (Ahora ya tenemos el championship_id) //////////
