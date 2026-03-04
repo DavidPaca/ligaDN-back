@@ -12,7 +12,12 @@ class ChampionshipTeamsController extends Controller
      */
     public function index()
     {
-        return response()->json(championship_teams::where('status', 'V')->with(['category_info', 'equipo'])->get());
+        // Traemos los datos con relaciones para saber qué equipo es y en qué categoría está
+        $inscripcionesAll = championship_teams::where('status', 'V')
+            ->with(['championship_category.category', 'championship_category.championship', 'equipo'])
+            ->get();
+
+        return response()->json($inscripcionesAll);
     }
 
     /**
@@ -20,12 +25,27 @@ class ChampionshipTeamsController extends Controller
      */
     public function create(Request $request)
     {
-        $data = $request->validate([
-            'championship_category_id' => 'required|exists:championship_categories,championship_category_id',
-            'equipo_id'                => 'required|exists:equipos,equipo_id',
-        ]);
-        $item = championship_teams::create(array_merge($data, ['status' => 'V']));
-        return response()->json(['message' => 'Equipo inscrito correctamente', 'data' => $item], 201);
+        // 1. Recolectar datos y establecer valores por defecto
+        $data = $request->all();
+        $data['status'] = $request->input('status', 'V');
+        // 2. Crear el registro con manejo de errores
+        try {
+            // Validamos que los IDs existan en sus respectivas tablas
+            $request->validate([
+                'championship_category_id' => 'required|exists:championship_categories,championship_category_id',
+                'equipo_id'                => 'required|exists:equipos,equipo_id',
+            ]);
+            $nuevaInscripcion = championship_teams::create($data);
+            return response()->json([
+                'mensaje' => 'Equipo inscrito en el campeonato con éxito',
+                'data' => $nuevaInscripcion
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'No se pudo inscribir al equipo',
+                'detalles' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -55,16 +75,56 @@ class ChampionshipTeamsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, championship_teams $championship_teams)
+    public function update(Request $request, $championship_team_id)
     {
-        //
+        try {
+            $inscripcion = championship_teams::find($championship_team_id);
+            if (!$inscripcion) {
+                return response()->json(['error' => 'Inscripción no encontrada'], 404);
+            }
+            $inscripcion->update($request->all());
+            return response()->json([
+                'mensaje' => 'Inscripción actualizada con éxito',
+                'data' => $inscripcion
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'No se pudo actualizar la inscripción',
+                'detalles' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(championship_teams $championship_teams)
+    public function destroy($championship_team_id)
     {
-        //
+        try {
+            $inscripcion = championship_teams::find($championship_team_id);
+
+            if (!$inscripcion) {
+                return response()->json([
+                    'status' => 'error',
+                    'mensaje' => 'La inscripción que intenta eliminar no existe'
+                ], 404);
+            }
+
+            // Borrado Lógico: Cambiamos status a 'E'
+            $inscripcion->update([
+                'status' => 'E'
+            ]);
+            return response()->json([
+                'status' => 'success',
+                'mensaje' => 'Equipo retirado del campeonato (E)',
+                'data' => $inscripcion
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'error' => 'No se pudo retirar al equipo del campeonato',
+                'detalles' => $e->getMessage()
+            ], 500);
+        }
     }
 }
