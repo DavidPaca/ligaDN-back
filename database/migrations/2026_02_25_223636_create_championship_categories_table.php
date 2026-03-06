@@ -21,11 +21,9 @@ return new class extends Migration
             $table->id('championship_category_id');
             // Relación con championships
             $table->unsignedBigInteger('championship_id')->nullable();
-            // Relación con categories
             $table->unsignedBigInteger('category_id')->nullable();
-            // Número máximo de equipos permitidos en esta categoría (opcional)
             $table->integer('max_teams')->nullable();
-            // Estado de esta categoría dentro del campeonato
+            $table->enum('game_system', ['league', 'playoffs', 'mixed']); // League (Todos contra todos), Playoffs (Eliminatorias), Mixed
             $table->char('status', 2)->nullable();
             $table->timestamps();
         });
