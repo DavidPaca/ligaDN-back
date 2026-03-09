@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->id('player_id');
-            $table->foreignId('equipo_id');
+            $table->foreignId('equipo_id')->nullable();
             $table->string('ci')->nullable();
             $table->string('name')->nullable();
             $table->string('last_name')->nullable();

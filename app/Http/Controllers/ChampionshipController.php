@@ -13,7 +13,8 @@ class ChampionshipController extends Controller
      */
     public function index()
     {
-        $data = Championship::where('status', 'V')->get();
+        $data = Championship::where('status', 'V')
+        ->get();
         return response()->json($data, 200);
 
         // $championshipAll = Championship::where('status', 'V')
@@ -21,6 +22,14 @@ class ChampionshipController extends Controller
         //     ->get();
         // // return response()->json($equipoAll);
         // return $championshipAll;
+    }
+
+    public function indexChampionshipAC()
+    {
+        $data = Championship::where('status', 'V')
+        ->where('status_championship', 'AC')
+        ->get();
+        return response()->json($data, 200);
     }
 
     /**
