@@ -35,9 +35,9 @@ class DatabaseSeeder extends Seeder
 
         ////////// CATEGORIAS (Ahora ya tenemos el championship_id) //////////
         $category = new \App\Models\Category;
-        $category->championship_id = $championship->championship_id; // <--- SOLUCIÓN AL ERROR
+        // $category->championship_id = $championship->championship_id; // <--- SOLUCIÓN AL ERROR
         $category->details = "Senior";
-        $category->gender = "Masculino";
+        $category->gender = "M";
         $category->description = "La categoria Senior es una categoría de nivel superior.";
         $category->status = "V";
         $category->save();

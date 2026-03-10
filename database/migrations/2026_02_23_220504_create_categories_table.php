@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id('category_id');
             // Relación con el campeonato padre
-            $table->unsignedBigInteger('championship_id');
+            // $table->unsignedBigInteger('championship_id');
             
             $table->string('details')->nullable();
             $table->string('gender')->nullable();
