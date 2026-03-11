@@ -32,6 +32,15 @@ class ChampionshipController extends Controller
         return response()->json($data, 200);
     }
 
+    public function indexChampionshipUnique($championship_id)
+    {
+        $data = Championship::where('status', 'V')
+        ->where('status_championship', 'AC')
+        ->where('championship_id', $championship_id)
+        ->get();
+        return response()->json($data, 200);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

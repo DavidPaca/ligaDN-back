@@ -13,6 +13,7 @@ use App\Http\Controllers\RefereeSanctionController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\VocaliaController;
 use App\Http\Controllers\MatchDetailsController;
+use App\Http\Controllers\TournamentPhasesController;
 use Illuminate\Http\Request;
 use Illuminate\Routing\ViewController;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/category-update/{category_id}', [CategoryController::class, 'update']);
     Route::post('/category-delete/{category_id}', [CategoryController::class, 'destroy']);
 
+    /////////////////////////////////////////////////// TOURNAMENT PHASES ///////////////////////////////////////////////////
+    Route::get('/tournament-phase', [TournamentPhasesController::class, 'index']);
+    Route::post('/tournament-phase-create', [TournamentPhasesController::class, 'create']);
+    Route::post('/tournament-phase-update/{tournament_phase_id}', [TournamentPhasesController::class, 'update']);
+    Route::post('/tournament-phase-delete/{tournament_phase_id}', [TournamentPhasesController::class, 'destroy']);
+
     /////////////////////////////////////////////////// PLAYING SCHEDULES ///////////////////////////////////////////////////
     Route::get('/playing-schedule', [PlayingScheduleController::class, 'index']);
     Route::post('/playing-schedule-create', [PlayingScheduleController::class, 'create']);
@@ -83,6 +90,7 @@ Route::middleware('auth:sanctum')->group(function () {
     /////////////////////////////////////////////////// *** CHAMPIONSHIPS *** ///////////////////////////////////////////////////
     Route::get('/championship', [ChampionshipController::class, 'index']);
     Route::get('/championship-active', [ChampionshipController::class, 'indexChampionshipAC']);
+    Route::get('/championship-unique/{championship_id}', [ChampionshipController::class, 'indexChampionshipUnique']);
     Route::post('/championship-create', [ChampionshipController::class, 'create']);
     Route::post('/championship-update/{championship_id}', [ChampionshipController::class, 'update']);
     Route::post('/championship-delete/{championship_id}', [ChampionshipController::class, 'destroy']);

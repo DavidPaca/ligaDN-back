@@ -157,5 +157,24 @@ class DatabaseSeeder extends Seeder
         $detail3->period = 2;
         $detail3->status = 'V';
         $detail3->save();
+
+        /////////// TOURNAMENT PHASES ///////////
+        $tournament_phase = new \App\Models\tournament_phases();
+        $tournament_phase->details = "Todos contra todos";
+        $tournament_phase->description = "Consiste en que todos los equipos se enfrentan entre si contra todos";
+        $tournament_phase->status = "V";
+        $tournament_phase->save();
+
+        $tournament_phase = new \App\Models\tournament_phases();
+        $tournament_phase->details = "Todos contra todos + Eliminatoria";
+        $tournament_phase->description = "Consiste en que todos los equipos se enfrentan entre si contra todos para llagar a las eliminatorias";
+        $tournament_phase->status = "V";
+        $tournament_phase->save();
+
+        $tournament_phase = new \App\Models\tournament_phases();
+        $tournament_phase->details = "Eliminatoria";
+        $tournament_phase->description = "Consiste en que los equipos que no pueden enfrentar a todos los equipos se enfrentan a los equipos que pueden enfrentar a todos los equipos";
+        $tournament_phase->status = "V";
+        $tournament_phase->save();
     }
 }
