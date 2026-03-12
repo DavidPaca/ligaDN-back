@@ -10,16 +10,21 @@ class ChampionshipCategoriesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($championship_id)
     {
-        // return response()->json(championship_categories::where('status', 'V')->with(['championship', 'category'])->get());
-
-        // Traemos los activos con sus relaciones para facilitar el trabajo al frontend
-        $categoriasAll = championship_categories::where('status', 'V')
-            ->with(['championship', 'category'])
+        $categoriasAll = championship_categories::join('championships', 'championship_categories.championship_id', '=', 'championships.championship_id')
+            ->join('categories', 'championship_categories.category_id', '=', 'categories.category_id')
+            ->select(
+                'championship_categories.*',
+                'categories.*',
+                'championships.name as championship_name' // Alias para evitar colisiones
+            )
+            // Especificamos la tabla en el where para evitar ambigüedad
+            ->where('championship_categories.status', 'V')
+            ->where('championship_categories.championship_id', $championship_id)    
             ->get();
 
-        return $categoriasAll;
+        return response()->json($categoriasAll);
     }
 
     /**

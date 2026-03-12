@@ -96,7 +96,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/championship-delete/{championship_id}', [ChampionshipController::class, 'destroy']);
 
     /////////////////////////////////////////////////// CHAMPIONSHIP CATEGORIES ///////////////////////////////////////////////////
-    Route::get('/championship-category', [ChampionshipCategoriesController::class, 'index']);
+    Route::get('/championship-category/{championship_id}', [ChampionshipCategoriesController::class, 'index']); 
     Route::post('/championship-category-create', [ChampionshipCategoriesController::class, 'create']);
     Route::post('/championship-category-update/{championship_category_id}', [ChampionshipCategoriesController::class, 'update']);
     Route::post('/championship-category-delete/{championship_category_id}', [ChampionshipCategoriesController::class, 'destroy']);
