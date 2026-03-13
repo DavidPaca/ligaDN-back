@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\championship;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,7 +15,7 @@ class ChampionshipController extends Controller
     public function index()
     {
         $data = Championship::where('status', 'V')
-        ->get();
+            ->get();
         return response()->json($data, 200);
 
         // $championshipAll = Championship::where('status', 'V')
@@ -27,17 +28,17 @@ class ChampionshipController extends Controller
     public function indexChampionshipAC()
     {
         $data = Championship::where('status', 'V')
-        ->where('status_championship', 'AC')
-        ->get();
+            ->where('status_championship', 'AC')
+            ->get();
         return response()->json($data, 200);
     }
 
     public function indexChampionshipUnique($championship_id)
     {
         $data = Championship::where('status', 'V')
-        ->where('status_championship', 'AC')
-        ->where('championship_id', $championship_id)
-        ->get();
+            ->where('status_championship', 'AC')
+            ->where('championship_id', $championship_id)
+            ->get();
         return response()->json($data, 200);
     }
 
@@ -46,36 +47,28 @@ class ChampionshipController extends Controller
      */
     public function create(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'type' => 'required|in:unique,categories', // Validación del ENUM
-            'start_date' => 'required|date',
-            'end_date' => 'nullable|date',
-            'status_championship' => 'required|string|max:2', // PE, AC, FI
-        ]);
+        $data = $request->all();
+        // 1. Inyectamos el ID del usuario autenticado (vía Token)
+        // Esto es mucho más seguro que recibirlo desde el front
+        $data['user_id'] = auth()->id();
+        $data['status'] = $request->input('status', 'V');
+        $data['status_championship'] = $request->input('status_championship', 'AC');
+        $data['created_at'] = now()->format('Y-m-d');
+        $data['updated_at'] = now()->format('Y-m-d');
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+        try {
+            $newData = championship::create($data);
+            return response()->json([
+                'mensaje' => 'Campeonato creado con éxito',
+                'data' => $newData
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Error interno',
+                'detalles' => $e->getMessage(),
+                'datos_recibidos' => $data // Esto te ayudará a ver si user_id es null
+            ], 500);
         }
-
-        $championship = new Championship();
-        $championship->name = $request->name;
-        $championship->type = $request->type;
-        $championship->start_date = $request->start_date;
-        $championship->end_date = $request->end_date;
-        $championship->status_championship = $request->status_championship;
-        $championship->status = 'V'; // Vigente por defecto
-        $championship->description = $request->description;
-        $championship->user_id = auth()->id(); // El admin que lo crea
-        $championship->save();
-
-        return response()->json([
-            'message' => 'Campeonato creado con éxito',
-            'data' => $championship,
-            'info' => $request->type == 'categories'
-                ? 'Recuerda asignar las categorías correspondientes.'
-                : 'Campeonato de tabla única listo.'
-        ], 201);
     }
 
     /**
