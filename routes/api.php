@@ -71,9 +71,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /////////////////////////////////////////////////// TOURNAMENT PHASES ///////////////////////////////////////////////////
     Route::get('/tournament-phase', [TournamentPhasesController::class, 'index']);
-    Route::post('/tournament-phase-create', [TournamentPhasesController::class, 'create']);
-    Route::post('/tournament-phase-update/{tournament_phase_id}', [TournamentPhasesController::class, 'update']);
-    Route::post('/tournament-phase-delete/{tournament_phase_id}', [TournamentPhasesController::class, 'destroy']);
 
     /////////////////////////////////////////////////// PLAYING SCHEDULES ///////////////////////////////////////////////////
     Route::get('/playing-schedule', [PlayingScheduleController::class, 'index']);
@@ -93,10 +90,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/championship-unique/{championship_id}', [ChampionshipController::class, 'indexChampionshipUnique']);
     Route::post('/championship-create', [ChampionshipController::class, 'create']);
     Route::post('/championship-update/{championship_id}', [ChampionshipController::class, 'update']);
-    Route::post('/championship-delete/{championship_id}', [ChampionshipController::class, 'destroy']);
+    Route::post('/championship-delete/{championship_id}', [ChampionshipController::class, 'destroy']); 
 
     /////////////////////////////////////////////////// CHAMPIONSHIP CATEGORIES ///////////////////////////////////////////////////
-    Route::get('/championship-category/{championship_id}/{category_id}', [ChampionshipCategoriesController::class, 'index']); 
+    // Route::get('/championship-category/{championship_id}/{category_id}', [ChampionshipCategoriesController::class, 'index']); 
+    Route::get('/championship-category/{championship_id}', [ChampionshipCategoriesController::class, 'index']); 
     Route::post('/championship-category-create', [ChampionshipCategoriesController::class, 'create']);
     Route::post('/championship-category-update/{championship_category_id}', [ChampionshipCategoriesController::class, 'update']);
     Route::post('/championship-category-delete/{championship_category_id}', [ChampionshipCategoriesController::class, 'destroy']);

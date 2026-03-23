@@ -10,7 +10,8 @@ class ChampionshipCategoriesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($championship_id, $category_id)
+    // public function index($championship_id, $category_id)
+    public function index($championship_id)
     {
         $categoriasAll = championship_categories::join('championships', 'championship_categories.championship_id', '=', 'championships.championship_id')
             ->join('categories', 'championship_categories.category_id', '=', 'categories.category_id')
@@ -22,7 +23,7 @@ class ChampionshipCategoriesController extends Controller
             // Especificamos la tabla en el where para evitar ambigüedad
             ->where('championship_categories.status', 'V')
             ->where('championship_categories.championship_id', $championship_id)   
-            ->where('championship_categories.category_id', $category_id)
+            // ->where('championship_categories.category_id', $category_id)
             ->get();
 
         return response()->json($categoriasAll);
@@ -52,7 +53,7 @@ class ChampionshipCategoriesController extends Controller
             $request->validate([
                 'championship_id' => 'required|exists:championships,championship_id',
                 'category_id'     => 'required|exists:categories,category_id',
-                'max_teams'       => 'required|integer',
+                // 'max_teams'       => 'required|integer',
             ]);
 
             $nuevaConfiguracion = championship_categories::create($data);
