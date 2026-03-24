@@ -22,7 +22,7 @@ class ChampionshipCategoriesController extends Controller
             )
             // Especificamos la tabla en el where para evitar ambigüedad
             ->where('championship_categories.status', 'V')
-            ->where('championship_categories.championship_id', $championship_id)   
+            ->where('championship_categories.championship_id', $championship_id)
             // ->where('championship_categories.category_id', $category_id)
             ->get();
 
@@ -34,27 +34,21 @@ class ChampionshipCategoriesController extends Controller
      */
     public function create(Request $request)
     {
-        // echo "<pre>+ $request->all()</pre>";
-        // $data = $request->validate([
-        //     'championship_id' => 'required|exists:championships,championship_id',
-        //     'category_id'     => 'required|exists:categories,category_id',
-        //     'max_teams'       => 'required|integer',
-        // ]);
-        // $item = championship_categories::create(array_merge($data, ['status' => 'V']));
-        // return response()->json(['message' => 'Categoría asignada al campeonato', 'data' => $item], 201);
-
         // 1. Recolectar datos y establecer valores por defecto
         $data = $request->all();
         $data['status'] = $request->input('status', 'V');
-
+        // $data['created_at'] = now()->format('Y-m-d');
+        $data['created_at'] = now();
+        $data['updated_at'] = now();
         // 2. Crear el registro en la DB con manejo de errores
         try {
             // Validamos para asegurar integridad antes de insertar
-            $request->validate([
-                'championship_id' => 'required|exists:championships,championship_id',
-                'category_id'     => 'required|exists:categories,category_id',
-                // 'max_teams'       => 'required|integer',
-            ]);
+            // $request->validate([
+            //     'championship_id' => 'required|exists:championships,championship_id',
+            //     'category_id'     => 'required|exists:categories,category_id',
+            //     // 'max_teams'       => 'required|integer',
+            //     'tournament_phases_id' => 'required|exists:tournament_phases,tournament_phases_id'
+            // ]);
 
             $nuevaConfiguracion = championship_categories::create($data);
 
