@@ -15,9 +15,11 @@ class ChampionshipCategoriesController extends Controller
     {
         $categoriasAll = championship_categories::join('championships', 'championship_categories.championship_id', '=', 'championships.championship_id')
             ->join('categories', 'championship_categories.category_id', '=', 'categories.category_id')
+            ->join('tournament_phases', 'championship_categories.tournament_phases_id', '=', 'tournament_phases.tournament_phases_id')
             ->select(
                 'championship_categories.*',
                 'categories.*',
+                'tournament_phases.details as tournament_phase_details',
                 'championships.name as championship_name' // Alias para evitar colisiones
             )
             // Especificamos la tabla en el where para evitar ambigüedad
