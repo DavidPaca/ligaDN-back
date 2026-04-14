@@ -12,10 +12,22 @@ class PlayerController extends Controller
      */
     public function index()
     {
-        // Traemos jugadores vigentes con su equipo
-        return player::where('status', 'V')
-            ->with('equipo')
+
+        $playerAll = player::where('status', 'V')
+            // ->orderBy('nombre_completo')
             ->get();
+        // return response()->json($equipoAll);
+        return $playerAll;
+    }
+
+    public function indexTeam($equipo_id)
+    {
+        $playerAll = player::where('equipo_id', $equipo_id)
+            ->where('status', 'V')
+            // ->orderBy('nombre_completo')
+            ->get();
+        // return response()->json($equipoAll);
+        return $playerAll;
     }
 
     /**
@@ -23,18 +35,35 @@ class PlayerController extends Controller
      */
     public function create(Request $request)
     {
+        // 1. Validar duplicados antes de intentar crear
+        $existeCi = Player::where('ci', $request->ci)->exists();
+
+        $existeDorsal = Player::where('equipo_id', $request->equipo_id)
+            ->where('shirt_number', $request->shirt_number)
+            ->exists();
+
+        if ($existeCi || $existeDorsal) {
+            return response()->json([
+                'status' => 'error',
+                'mensaje' => 'El jugador ya existe (Cédula o Número de camiseta duplicado en el equipo).'
+            ], 400); // Código 400 para errores de validación
+        }
+        // 2. Si no existe, procedemos a crear
         $data = $request->all();
         $data['status'] = $request->input('status', 'V');
+        $data['birthdate'] = now()->format('Y-m-d');
 
         try {
             $nuevoPlayer = player::create($data);
             return response()->json([
-                'mensaje' => 'Jugador creado', 
-                'data' => $nuevoPlayer], 201);
+                'mensaje' => 'Jugador creado',
+                'data' => $nuevoPlayer
+            ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Error al crear jugador', 
-                'detalles' => $e->getMessage()], 500);
+                'error' => 'Error al crear jugador',
+                'detalles' => $e->getMessage()
+            ], 500);
         }
     }
 
@@ -70,7 +99,7 @@ class PlayerController extends Controller
         try {
             $player = player::find($player_id);
             if (!$player) return response()->json(['error' => 'No encontrado'], 404);
-            
+
             $player->update($request->all());
             return response()->json(['mensaje' => 'Actualizado', 'data' => $player], 200);
         } catch (\Exception $e) {

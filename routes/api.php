@@ -107,6 +107,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     /////////////////////////////////////////////////// PLAYERS ///////////////////////////////////////////////////
     Route::get('/player', [PlayerController::class, 'index']);
+    Route::get('/player-team/{equipo_id}', [PlayerController::class, 'indexTeam']);
     Route::post('/player-create', [PlayerController::class, 'create']);
     Route::post('/player-update/{player_id}', [PlayerController::class, 'update']);
     Route::post('/player-delete/{player_id}', [PlayerController::class, 'destroy']);
