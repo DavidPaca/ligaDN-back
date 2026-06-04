@@ -27,6 +27,7 @@ class PlayerController extends Controller
             // ->orderBy('nombre_completo')
             ->get();
         // return response()->json($equipoAll);
+        // echo "Soy indexTeam";
         return $playerAll;
     }
 
